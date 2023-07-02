@@ -6,6 +6,6 @@
 
         public string Description { get; set; }
 
-        public virtual ICollection<Club> Clubs { get; set; }
+        public virtual ICollection<Club>? Clubs { get; set; }
     }
 }

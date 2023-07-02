@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.DTOs;
+using Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,13 @@ namespace Application
 {
     public interface IPlayersService
     {
-        Task<List<Player>> GetAllPlayersAsync();
+        Task<List<PlayerDTO>> GetAllPlayersAsync();
 
-        Task<Player> GetPlayerByIdAsync(Guid id);
+        Task<PlayerDTO> GetPlayerByIdAsync(Guid id);
 
-        Task AddPlayerAsync(Player player);
+        Task AddPlayerAsync(PlayerDTO player);
 
-        Task RemovePlayerAsync(Player player);
+        Task RemovePlayerAsync(PlayerDTO player);
 
         Task EditPlayerAsync(Guid playerId);
     }

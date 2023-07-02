@@ -1,16 +1,17 @@
-﻿using Domain;
+﻿using Application.DTOs;
+using Domain;
 
 namespace Application
 {
     public interface IClubService
     {
-        Task<List<Club>> GetAllClubsAsync();
+        Task<List<ClubDTO>> GetAllClubsAsync();
 
-        Task<Club> GetClubByIdAsync(Guid id);
+        Task<ClubDTO> GetClubByIdAsync(Guid id);
 
-        Task AddClubAsync(Club club);
+        Task AddClubAsync(ClubDTO club);
 
-        Task RemoveClubAsync(Club club);
+        Task RemoveClubAsync(ClubDTO club);
 
         Task EditClubAsync(Guid id);
     }

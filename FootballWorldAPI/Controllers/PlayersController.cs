@@ -1,4 +1,5 @@
 ﻿using Application;
+using Application.DTOs;
 using Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +19,17 @@ namespace FootballWorldAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Player>>> GetAllPlayers()
+        public async Task<ActionResult<List<PlayerDTO>>> GetAllPlayers()
         {
             return await _playersService.GetAllPlayersAsync();
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePlayer(Player player)
+        public async Task<IActionResult> CreatePlayer(PlayerDTO playerDTO)
         {
             try
             {
-                await _playersService.AddPlayerAsync(player);
+                await _playersService.AddPlayerAsync(playerDTO);
                 return Ok();
             }
             catch (Exception ex)

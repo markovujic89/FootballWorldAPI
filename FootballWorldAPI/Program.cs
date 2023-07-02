@@ -1,4 +1,5 @@
 using Application;
+using Application.Core;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddScoped<IPlayersService, PlayersService>();
 builder.Services.AddScoped<IClubService, ClubService>();
 

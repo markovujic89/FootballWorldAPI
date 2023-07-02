@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using Application.DTOs;
+using AutoMapper;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -7,22 +9,17 @@ namespace Application
     public class PlayersService : IPlayersService
     {
         private readonly DataContext _dataContext;
+        private readonly IMapper _mapper;
 
-        public PlayersService(DataContext dataContext)
+        public PlayersService(DataContext dataContext, IMapper mapper)
         {
             _dataContext = dataContext;
+            _mapper = mapper;
         }
 
-        public async Task AddPlayerAsync(Player player)
+        public async Task AddPlayerAsync(PlayerDTO playerDTO)
         {
-            var club = await _dataContext.Clubs.FirstOrDefaultAsync(x=>x.Id == player.ClubId);
-
-            if (club == null)
-            {
-                player.Club = null;
-            }
-
-            player.Club = club;
+            var player = _mapper.Map<Player>(playerDTO);
 
             await _dataContext.AddAsync(player);
 
@@ -34,33 +31,39 @@ namespace Application
             throw new NotImplementedException();
         }
 
-        public async Task<List<Player>> GetAllPlayersAsync()
+        public async Task<List<PlayerDTO>> GetAllPlayersAsync()
         {
-            return await _dataContext.Players.ToListAsync();
+            var players = await _dataContext.Players.ToListAsync();
+
+            var playersDTO = _mapper.Map<List<PlayerDTO>>(players);
+
+            return playersDTO;
         }
 
-        public async Task<Player> GetPlayerByIdAsync(Guid id)
+        public async Task<PlayerDTO> GetPlayerByIdAsync(Guid id)
         {
             var player = await _dataContext.Players.SingleOrDefaultAsync();
 
             if (player == null)
             {
-                return await Task.FromResult<Player>(null);
+                return await Task.FromResult<PlayerDTO>(null);
             }
 
-            return player;
+            var playerDTO = _mapper.Map<PlayerDTO>(player);
+
+            return playerDTO;
         }
 
-        public async Task RemovePlayerAsync(Player player)
+        public async Task RemovePlayerAsync(PlayerDTO playerDTO)
         {
-            var _player = await _dataContext.Players.SingleOrDefaultAsync();
+            var player = await _dataContext.Players.SingleOrDefaultAsync(x=>x.Id == playerDTO.Id);
 
-            if (_player is null)
+            if (player is null)
             {
                 // log
                 return;
             }
-
+ 
             _dataContext.Players.Remove(player);
 
             await _dataContext.SaveChangesAsync();

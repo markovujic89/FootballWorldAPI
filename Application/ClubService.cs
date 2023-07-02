@@ -1,20 +1,28 @@
-﻿using Domain;
+﻿using Application.DTOs;
+using AutoMapper;
+using Azure.Core;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System.Diagnostics;
 
 namespace Application
 {
     public class ClubService : IClubService
     {
         private readonly DataContext _dataContext;
+        private readonly IMapper _mapper;
 
-        public ClubService(DataContext dataContext)
+        public ClubService(DataContext dataContext, IMapper mapper)
         {
             _dataContext = dataContext;
+            _mapper = mapper;
         }
 
-        public async Task AddClubAsync(Club club)
+        public async Task AddClubAsync(ClubDTO clubDTO)
         {
+            var club = _mapper.Map<Club>(clubDTO);
+            
             await _dataContext.AddAsync(club);
 
             await _dataContext.SaveChangesAsync();
@@ -25,17 +33,24 @@ namespace Application
             throw new NotImplementedException();
         }
 
-        public async Task<List<Club>> GetAllClubsAsync()
+        public async Task<List<ClubDTO>> GetAllClubsAsync()
         {
-            return await _dataContext.Clubs.ToListAsync();
+            var clubs = await _dataContext.Clubs.ToListAsync();
+            var clubsDTO = _mapper.Map<List<ClubDTO>>(clubs);
+
+            return clubsDTO;
         }
 
-        public Task<Club> GetClubByIdAsync(Guid id)
+        public async Task<ClubDTO> GetClubByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var club = await _dataContext.Clubs.FindAsync(id);
+
+            var clubDTO = _mapper.Map<ClubDTO>(club);
+
+            return clubDTO;
         }
 
-        public Task RemoveClubAsync(Club club)
+        public Task RemoveClubAsync(ClubDTO club)
         {
             throw new NotImplementedException();
         }
