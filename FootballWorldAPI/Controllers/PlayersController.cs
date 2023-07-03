@@ -1,7 +1,5 @@
 ﻿using Application;
 using Application.DTOs;
-using Domain;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FootballWorldAPI.Controllers
@@ -25,18 +23,35 @@ namespace FootballWorldAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePlayer(PlayerDTO playerDTO)
+        public async Task<IActionResult> CreatePlayer(CreatePlayerDTO playerDTO)
         {
             try
             {
                 await _playersService.AddPlayerAsync(playerDTO);
-                return Ok();
+                return StatusCode(201);
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
             
+        }
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> EditPlayer([FromRoute] Guid id,[FromBody] EditPlayerDTO editPlayerDTO)
+        {
+            await _playersService.EditPlayerAsync(id ,editPlayerDTO);
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeletePlayer(Guid id)
+        {
+            await _playersService.RemovePlayerAsync(id);
+
+            return Ok();
         }
     }
 }

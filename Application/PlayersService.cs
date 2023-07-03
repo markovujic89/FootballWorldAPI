@@ -17,18 +17,25 @@ namespace Application
             _mapper = mapper;
         }
 
-        public async Task AddPlayerAsync(PlayerDTO playerDTO)
+        public async Task AddPlayerAsync(CreatePlayerDTO createPlayerDTO)
         {
-            var player = _mapper.Map<Player>(playerDTO);
+            var player = _mapper.Map<Player>(createPlayerDTO);
 
             await _dataContext.AddAsync(player);
 
             await _dataContext.SaveChangesAsync();
         }
 
-        public Task EditPlayerAsync(Guid playerId)
+        public async Task EditPlayerAsync(Guid id, EditPlayerDTO editPlayerDTO)
         {
-            throw new NotImplementedException();
+            var plyer = await _dataContext.Players.FindAsync(id);
+
+            if(plyer is not null)
+            {
+                plyer = _mapper.Map<Player>(editPlayerDTO);
+
+                await _dataContext.SaveChangesAsync();
+            }
         }
 
         public async Task<List<PlayerDTO>> GetAllPlayersAsync()
@@ -54,9 +61,9 @@ namespace Application
             return playerDTO;
         }
 
-        public async Task RemovePlayerAsync(PlayerDTO playerDTO)
+        public async Task RemovePlayerAsync(Guid id)
         {
-            var player = await _dataContext.Players.SingleOrDefaultAsync(x=>x.Id == playerDTO.Id);
+            var player = await _dataContext.Players.SingleOrDefaultAsync(x=>x.Id == id);
 
             if (player is null)
             {

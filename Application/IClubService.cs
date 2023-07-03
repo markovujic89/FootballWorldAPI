@@ -9,10 +9,10 @@ namespace Application
 
         Task<ClubDTO> GetClubByIdAsync(Guid id);
 
-        Task AddClubAsync(ClubDTO club);
+        Task AddClubAsync(CreateClubDTO createClubDTO);
 
-        Task RemoveClubAsync(ClubDTO club);
+        Task RemoveClubAsync(ClubDTO clubDTO);
 
-        Task EditClubAsync(Guid id);
+        Task EditClubAsync(Guid id, EditClubDTO clubDTO);
     }
 }

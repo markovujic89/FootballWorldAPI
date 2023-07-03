@@ -19,18 +19,25 @@ namespace Application
             _mapper = mapper;
         }
 
-        public async Task AddClubAsync(ClubDTO clubDTO)
+        public async Task AddClubAsync(CreateClubDTO createClubDTO)
         {
-            var club = _mapper.Map<Club>(clubDTO);
+            var club = _mapper.Map<Club>(createClubDTO);
             
             await _dataContext.AddAsync(club);
 
             await _dataContext.SaveChangesAsync();
         }
 
-        public Task EditClubAsync(Guid id)
+        public async Task EditClubAsync(Guid id,EditClubDTO editClubDTO)
         {
-            throw new NotImplementedException();
+            var club = await _dataContext.Clubs.FindAsync(id);
+
+            if(club is not null)
+            {
+                club = _mapper.Map<Club>(editClubDTO);
+
+                await _dataContext.SaveChangesAsync();
+            }
         }
 
         public async Task<List<ClubDTO>> GetAllClubsAsync()
@@ -50,9 +57,16 @@ namespace Application
             return clubDTO;
         }
 
-        public Task RemoveClubAsync(ClubDTO club)
+        public async Task RemoveClubAsync(ClubDTO clubDTO)
         {
-            throw new NotImplementedException();
+            var club = _dataContext.Clubs.Find(clubDTO.Id);
+
+            if(club is not null)
+            {
+                _dataContext.Clubs.Remove(club);
+
+                await _dataContext.SaveChangesAsync();
+            }
         }
     }
 }

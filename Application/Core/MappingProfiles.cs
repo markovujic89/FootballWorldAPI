@@ -13,6 +13,14 @@ namespace Application.Core
             CreateMap<Player, PlayerDTO>();
             CreateMap<ClubDTO, Club>();
             CreateMap<Club, ClubDTO>();
+            CreateMap<Club, CreateClubDTO>();
+            CreateMap<CreateClubDTO, Club>();
+            CreateMap<Player, CreatePlayerDTO>();
+            CreateMap<CreatePlayerDTO, Player>();
+            CreateMap<Club, EditClubDTO>();
+            CreateMap<EditClubDTO, Club>();
+            CreateMap<Player, EditPlayerDTO>();
+            CreateMap<EditPlayerDTO, Player>();
         }
     }
 }

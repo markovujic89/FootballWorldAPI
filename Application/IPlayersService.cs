@@ -1,10 +1,4 @@
 ﻿using Application.DTOs;
-using Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application
 {
@@ -14,10 +8,10 @@ namespace Application
 
         Task<PlayerDTO> GetPlayerByIdAsync(Guid id);
 
-        Task AddPlayerAsync(PlayerDTO player);
+        Task AddPlayerAsync(CreatePlayerDTO player);
 
-        Task RemovePlayerAsync(PlayerDTO player);
+        Task RemovePlayerAsync(Guid id);
 
-        Task EditPlayerAsync(Guid playerId);
+        Task EditPlayerAsync(Guid id, EditPlayerDTO playerDTO);
     }
 }

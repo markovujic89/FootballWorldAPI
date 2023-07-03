@@ -39,12 +39,12 @@ namespace FootballWorldAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateClub(ClubDTO clubDTO)
+        public async Task<ActionResult> CreateClub(CreateClubDTO clubDTO)
         {
             try
             {
                 await _clubService.AddClubAsync(clubDTO);
-                return Ok();
+                return StatusCode(201);
             }
             catch (Exception ex)
             {
@@ -52,5 +52,13 @@ namespace FootballWorldAPI.Controllers
             }
 
         }
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> EditClub([FromRoute] Guid id, [FromBody] EditClubDTO editClubDTO)
+        {
+            await _clubService.EditClubAsync(id, editClubDTO);
+            return Ok();
+        }    
     }
 }
