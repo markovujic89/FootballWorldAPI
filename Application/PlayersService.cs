@@ -26,13 +26,36 @@ namespace Application
             await _dataContext.SaveChangesAsync();
         }
 
+        public async Task AssignePlayerToClubAsync(Guid playerId, Guid clubId)
+        {
+            var player = await _dataContext.Players.FindAsync(playerId);
+            var club = await _dataContext.Clubs.FindAsync(clubId);
+
+            if (player is null || club is null)
+            {
+                return;
+            }
+
+            club.Players ??= new List<Player>();
+
+            if (!club.Players.Contains(player))
+            {
+                club.Players.Add(player);
+            }
+
+            player.Club = club;
+            player.ClubId = clubId;
+
+            await _dataContext.SaveChangesAsync();
+        }
+
         public async Task EditPlayerAsync(Guid id, EditPlayerDTO editPlayerDTO)
         {
             var plyer = await _dataContext.Players.FindAsync(id);
 
-            if(plyer is not null)
+            if (plyer is not null)
             {
-                plyer = _mapper.Map<Player>(editPlayerDTO);
+                _mapper.Map(editPlayerDTO, plyer);
 
                 await _dataContext.SaveChangesAsync();
             }
@@ -63,14 +86,14 @@ namespace Application
 
         public async Task RemovePlayerAsync(Guid id)
         {
-            var player = await _dataContext.Players.SingleOrDefaultAsync(x=>x.Id == id);
+            var player = await _dataContext.Players.SingleOrDefaultAsync(x => x.Id == id);
 
             if (player is null)
             {
                 // log
                 return;
             }
- 
+
             _dataContext.Players.Remove(player);
 
             await _dataContext.SaveChangesAsync();

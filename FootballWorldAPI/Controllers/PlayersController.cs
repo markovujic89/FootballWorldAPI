@@ -47,9 +47,19 @@ namespace FootballWorldAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeletePlayer(Guid id)
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeletePlayer([FromRoute]Guid id)
         {
             await _playersService.RemovePlayerAsync(id);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("api/players/{playerId}/clubs/{clubId}")]
+        public async Task<IActionResult> AssignePlayerToClubAsync([FromRoute] Guid playerId, [FromRoute] Guid clubId)
+        {
+            await _playersService.AssignePlayerToClubAsync(playerId , clubId);
 
             return Ok();
         }

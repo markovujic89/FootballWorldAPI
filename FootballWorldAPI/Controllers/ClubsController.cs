@@ -59,6 +59,15 @@ namespace FootballWorldAPI.Controllers
         {
             await _clubService.EditClubAsync(id, editClubDTO);
             return Ok();
-        }    
+        }
+
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteClub([FromRoute]Guid id)
+        {
+            await _clubService.RemoveClubAsync(id);
+
+            return Ok();
+        }
     }
 }

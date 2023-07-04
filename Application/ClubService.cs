@@ -34,7 +34,7 @@ namespace Application
 
             if(club is not null)
             {
-                club = _mapper.Map<Club>(editClubDTO);
+                _mapper.Map(editClubDTO, club);
 
                 await _dataContext.SaveChangesAsync();
             }
@@ -57,9 +57,9 @@ namespace Application
             return clubDTO;
         }
 
-        public async Task RemoveClubAsync(ClubDTO clubDTO)
+        public async Task RemoveClubAsync(Guid id)
         {
-            var club = _dataContext.Clubs.Find(clubDTO.Id);
+            var club = _dataContext.Clubs.Find(id);
 
             if(club is not null)
             {

@@ -13,5 +13,7 @@ namespace Application
         Task RemovePlayerAsync(Guid id);
 
         Task EditPlayerAsync(Guid id, EditPlayerDTO playerDTO);
+
+        Task AssignePlayerToClubAsync(Guid playerId, Guid clubId);
     }
 }

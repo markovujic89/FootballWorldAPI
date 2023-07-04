@@ -11,7 +11,7 @@ namespace Application
 
         Task AddClubAsync(CreateClubDTO createClubDTO);
 
-        Task RemoveClubAsync(ClubDTO clubDTO);
+        Task RemoveClubAsync(Guid id);
 
         Task EditClubAsync(Guid id, EditClubDTO clubDTO);
     }
