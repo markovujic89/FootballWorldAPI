@@ -21,10 +21,12 @@ namespace FootballWorldAPI.Controllers
             _editPlayerValidator = editPlayerValidator;
         }
 
+        // GET Players
+        // GET: /api/players?filterOn=Name&filterQuery=Tom
         [HttpGet]
-        public async Task<ActionResult<List<PlayerDTO>>> GetAllPlayers()
+        public async Task<ActionResult<List<PlayerDTO>>> GetAllPlayers([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
         {
-            return await _playersService.GetAllPlayersAsync();
+            return await _playersService.GetAllPlayersAsync(filterOn, filterQuery);
         }
 
         [HttpPost]
@@ -32,7 +34,7 @@ namespace FootballWorldAPI.Controllers
         {
             var validationResult = await _cratePlayerValidator.ValidateAsync(playerDTO);
 
-            if (!validationResult.IsValid) 
+            if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
@@ -46,12 +48,12 @@ namespace FootballWorldAPI.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
-            
+
         }
 
         [HttpPut]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> EditPlayer([FromRoute] Guid id,[FromBody] EditPlayerDTO editPlayerDTO)
+        public async Task<IActionResult> EditPlayer([FromRoute] Guid id, [FromBody] EditPlayerDTO editPlayerDTO)
         {
             var validationResult = await _editPlayerValidator.ValidateAsync(editPlayerDTO);
 
@@ -60,14 +62,14 @@ namespace FootballWorldAPI.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            await _playersService.EditPlayerAsync(id ,editPlayerDTO);
+            await _playersService.EditPlayerAsync(id, editPlayerDTO);
 
             return Ok();
         }
 
         [HttpDelete]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> DeletePlayer([FromRoute]Guid id)
+        public async Task<IActionResult> DeletePlayer([FromRoute] Guid id)
         {
             await _playersService.RemovePlayerAsync(id);
 
@@ -78,7 +80,7 @@ namespace FootballWorldAPI.Controllers
         [Route("api/players/{playerId}/clubs/{clubId}")]
         public async Task<IActionResult> AssignePlayerToClubAsync([FromRoute] Guid playerId, [FromRoute] Guid clubId)
         {
-            await _playersService.AssignePlayerToClubAsync(playerId , clubId);
+            await _playersService.AssignePlayerToClubAsync(playerId, clubId);
 
             return Ok();
         }

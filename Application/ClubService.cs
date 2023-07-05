@@ -1,10 +1,8 @@
 ﻿using Application.DTOs;
 using AutoMapper;
-using Azure.Core;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System.Diagnostics;
 
 namespace Application
 {
@@ -22,17 +20,17 @@ namespace Application
         public async Task AddClubAsync(CreateClubDTO createClubDTO)
         {
             var club = _mapper.Map<Club>(createClubDTO);
-            
+
             await _dataContext.AddAsync(club);
 
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task EditClubAsync(Guid id,EditClubDTO editClubDTO)
+        public async Task EditClubAsync(Guid id, EditClubDTO editClubDTO)
         {
             var club = await _dataContext.Clubs.FindAsync(id);
 
-            if(club is not null)
+            if (club is not null)
             {
                 _mapper.Map(editClubDTO, club);
 
@@ -61,7 +59,7 @@ namespace Application
         {
             var club = _dataContext.Clubs.Find(id);
 
-            if(club is not null)
+            if (club is not null)
             {
                 _dataContext.Clubs.Remove(club);
 

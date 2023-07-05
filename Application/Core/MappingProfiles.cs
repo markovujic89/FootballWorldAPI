@@ -1,7 +1,6 @@
 ﻿using Application.DTOs;
 using AutoMapper;
 using Domain;
-using System.Diagnostics;
 
 namespace Application.Core
 {

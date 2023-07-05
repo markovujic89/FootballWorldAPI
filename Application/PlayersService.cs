@@ -61,9 +61,20 @@ namespace Application
             }
         }
 
-        public async Task<List<PlayerDTO>> GetAllPlayersAsync()
+        public async Task<List<PlayerDTO>> GetAllPlayersAsync(string? filterOn = null, string? filterQuer = null)
         {
-            var players = await _dataContext.Players.ToListAsync();
+            var players = _dataContext.Players.AsQueryable();
+
+            // filtering
+            if (!String.IsNullOrWhiteSpace(filterOn) && !String.IsNullOrWhiteSpace(filterQuer))
+            {
+                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    players = players.Where(x => x.Name.Contains(filterQuer));
+                }
+            }
+
+            await players.ToListAsync();
 
             var playersDTO = _mapper.Map<List<PlayerDTO>>(players);
 

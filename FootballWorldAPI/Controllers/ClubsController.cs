@@ -1,6 +1,5 @@
 ﻿using Application;
 using Application.DTOs;
-using Application.Validations.Player;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,11 +29,11 @@ namespace FootballWorldAPI.Controllers
         // https://localhost:****/api/clubs/{id}
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<ClubDTO>> GetById([FromRoute]Guid id)
+        public async Task<ActionResult<ClubDTO>> GetById([FromRoute] Guid id)
         {
             var club = await _clubService.GetClubByIdAsync(id);
 
-            if(club is  null)
+            if (club is null)
             {
                 return NotFound();
             }
@@ -81,7 +80,7 @@ namespace FootballWorldAPI.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> DeleteClub([FromRoute]Guid id)
+        public async Task<IActionResult> DeleteClub([FromRoute] Guid id)
         {
             await _clubService.RemoveClubAsync(id);
 

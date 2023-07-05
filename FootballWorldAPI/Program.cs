@@ -3,11 +3,9 @@ using Application.Core;
 using Application.DTOs;
 using Application.Validations.Club;
 using Application.Validations.Player;
-using Domain;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 

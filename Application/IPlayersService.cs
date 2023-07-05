@@ -4,7 +4,7 @@ namespace Application
 {
     public interface IPlayersService
     {
-        Task<List<PlayerDTO>> GetAllPlayersAsync();
+        Task<List<PlayerDTO>> GetAllPlayersAsync(string? filterOn = null, string? filterQuer = null);
 
         Task<PlayerDTO> GetPlayerByIdAsync(Guid id);
 
