@@ -1,7 +1,7 @@
 ﻿using Application;
 using Application.DTOs;
-using Domain;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Application.Validations.Player;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FootballWorldAPI.Controllers
@@ -11,10 +11,14 @@ namespace FootballWorldAPI.Controllers
     public class ClubsController : ControllerBase
     {
         private readonly IClubService _clubService;
+        private readonly IValidator<CreateClubDTO> _createClubValidator;
+        private readonly IValidator<EditClubDTO> _editClubValidator;
 
-        public ClubsController(IClubService clubService)
+        public ClubsController(IClubService clubService, IValidator<CreateClubDTO> createClubValidator, IValidator<EditClubDTO> editClubValidator)
         {
             _clubService = clubService;
+            _createClubValidator = createClubValidator;
+            _editClubValidator = editClubValidator;
         }
 
         [HttpGet]
@@ -39,11 +43,18 @@ namespace FootballWorldAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateClub(CreateClubDTO clubDTO)
+        public async Task<ActionResult> CreateClub(CreateClubDTO createClubDTO)
         {
             try
             {
-                await _clubService.AddClubAsync(clubDTO);
+                var validationResult = await _createClubValidator.ValidateAsync(createClubDTO);
+
+                if (!validationResult.IsValid)
+                {
+                    return BadRequest(validationResult.Errors);
+                }
+
+                await _clubService.AddClubAsync(createClubDTO);
                 return StatusCode(201);
             }
             catch (Exception ex)
@@ -57,6 +68,13 @@ namespace FootballWorldAPI.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> EditClub([FromRoute] Guid id, [FromBody] EditClubDTO editClubDTO)
         {
+            var validationResult = await _editClubValidator.ValidateAsync(editClubDTO);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             await _clubService.EditClubAsync(id, editClubDTO);
             return Ok();
         }

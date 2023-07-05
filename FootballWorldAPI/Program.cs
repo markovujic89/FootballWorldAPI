@@ -1,7 +1,13 @@
 using Application;
 using Application.Core;
+using Application.DTOs;
+using Application.Validations.Club;
+using Application.Validations.Player;
+using Domain;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +26,10 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddScoped<IPlayersService, PlayersService>();
 builder.Services.AddScoped<IClubService, ClubService>();
+builder.Services.AddScoped<IValidator<CreatePlayerDTO>, CreatePlayerValidator>();
+builder.Services.AddScoped<IValidator<EditPlayerDTO>, EditPlayerValidation>();
+builder.Services.AddScoped<IValidator<CreateClubDTO>, CreateClubValidator>();
+builder.Services.AddScoped<IValidator<EditClubDTO>, EditClubValidator>();
 
 var app = builder.Build();
 
