@@ -21,9 +21,14 @@ namespace FootballWorldAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ClubDTO>>> GetAllClubs()
+        public async Task<ActionResult<List<ClubDTO>>> GetAllClubs([FromQuery] string? filterOn,
+            [FromQuery] string? filterQuery,
+            [FromQuery] string? sortBy,
+            [FromQuery] bool? isAscending,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
         {
-            return await _clubService.GetAllClubsAsync();
+            return await _clubService.GetAllClubsAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
         }
 
         // https://localhost:****/api/clubs/{id}

@@ -24,9 +24,14 @@ namespace FootballWorldAPI.Controllers
         // GET Players
         // GET: /api/players?filterOn=Name&filterQuery=Tom
         [HttpGet]
-        public async Task<ActionResult<List<PlayerDTO>>> GetAllPlayers([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool? isAscending)
+        public async Task<ActionResult<List<PlayerDTO>>> GetAllPlayers([FromQuery] string? filterOn, 
+            [FromQuery] string? filterQuery, 
+            [FromQuery] string? sortBy, 
+            [FromQuery] bool? isAscending,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
         {
-            return await _playersService.GetAllPlayersAsync(filterOn, filterQuery, sortBy, isAscending?? true);
+            return await _playersService.GetAllPlayersAsync(filterOn, filterQuery, sortBy, isAscending?? true, pageNumber, pageSize);
         }
 
         [HttpPost]

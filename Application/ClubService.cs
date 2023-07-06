@@ -38,12 +38,44 @@ namespace Application
             }
         }
 
-        public async Task<List<ClubDTO>> GetAllClubsAsync()
+        public async Task<List<ClubDTO>> GetAllClubsAsync(string? filterOn = null,
+            string? filterQuer = null,
+            string? sortBy = null,
+            bool isAscending = true,
+            int pageNumber = 1,
+            int pageSize = 10)
         {
-            var clubs = await _dataContext.Clubs.ToListAsync();
+
+
+            var clubs = _dataContext.Clubs.AsQueryable();
+
+            // filtering
+            if (!String.IsNullOrWhiteSpace(filterOn) && !String.IsNullOrWhiteSpace(filterQuer))
+            {
+                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    clubs = clubs.Where(x => x.Name.Contains(filterQuer));
+                }
+            }
+
+
+            // sorting
+            if (!String.IsNullOrWhiteSpace(sortBy))
+            {
+                if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    clubs = isAscending ? clubs.OrderBy(x => x.Name) : clubs.OrderByDescending(x => x.Name);
+                }
+            }
+
+            // pagination
+            var skipResults = (pageNumber - 1) * pageSize;
+
+            await clubs.ToListAsync();
+
             var clubsDTO = _mapper.Map<List<ClubDTO>>(clubs);
 
-            return clubsDTO;
+            return clubsDTO.Skip(skipResults).Take(pageSize).ToList();
         }
 
         public async Task<ClubDTO> GetClubByIdAsync(Guid id)

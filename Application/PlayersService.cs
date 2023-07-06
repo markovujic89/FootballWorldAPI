@@ -46,7 +46,7 @@ namespace Application
 
             player.Club = club;
             player.ClubId = clubId;
-            player.DateModified = DateTime.UtcNow;  
+            player.DateModified = DateTime.UtcNow;
 
             await _dataContext.SaveChangesAsync();
         }
@@ -63,7 +63,12 @@ namespace Application
             }
         }
 
-        public async Task<List<PlayerDTO>> GetAllPlayersAsync(string? filterOn = null, string? filterQuer = null, string? sortBy = null, bool isAscending = true)
+        public async Task<List<PlayerDTO>> GetAllPlayersAsync(string? filterOn = null,
+            string? filterQuer = null,
+            string? sortBy = null,
+            bool isAscending = true,
+            int pageNumber = 1,
+            int pageSize = 10)
         {
             var players = _dataContext.Players.AsQueryable();
 
@@ -77,12 +82,11 @@ namespace Application
             }
 
             // sorting
-
             if (!String.IsNullOrWhiteSpace(sortBy))
             {
                 if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
                 {
-                    players = isAscending? players.OrderBy(x => x.Name) : players.OrderByDescending(x=>x.Name);
+                    players = isAscending ? players.OrderBy(x => x.Name) : players.OrderByDescending(x => x.Name);
                 }
                 else if (sortBy.Equals("Age", StringComparison.OrdinalIgnoreCase))
                 {
@@ -90,12 +94,14 @@ namespace Application
                 }
             }
 
+            // pagination
+            var skipResults = (pageNumber - 1) * pageSize;
 
             await players.ToListAsync();
 
             var playersDTO = _mapper.Map<List<PlayerDTO>>(players);
 
-            return playersDTO;
+            return playersDTO.Skip(skipResults).Take(pageSize).ToList();
         }
 
         public async Task<PlayerDTO> GetPlayerByIdAsync(Guid id)
