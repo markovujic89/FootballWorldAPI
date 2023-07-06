@@ -4,7 +4,7 @@ namespace Application
 {
     public interface IPlayersService
     {
-        Task<List<PlayerDTO>> GetAllPlayersAsync(string? filterOn = null, string? filterQuer = null);
+        Task<List<PlayerDTO>> GetAllPlayersAsync(string? filterOn = null, string? filterQuer = null, string? sortBy = null, bool isAscending = true);
 
         Task<PlayerDTO> GetPlayerByIdAsync(Guid id);
 

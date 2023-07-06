@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using AutoMapper;
 using Domain;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -45,6 +46,7 @@ namespace Application
 
             player.Club = club;
             player.ClubId = clubId;
+            player.DateModified = DateTime.UtcNow;  
 
             await _dataContext.SaveChangesAsync();
         }
@@ -61,7 +63,7 @@ namespace Application
             }
         }
 
-        public async Task<List<PlayerDTO>> GetAllPlayersAsync(string? filterOn = null, string? filterQuer = null)
+        public async Task<List<PlayerDTO>> GetAllPlayersAsync(string? filterOn = null, string? filterQuer = null, string? sortBy = null, bool isAscending = true)
         {
             var players = _dataContext.Players.AsQueryable();
 
@@ -73,6 +75,21 @@ namespace Application
                     players = players.Where(x => x.Name.Contains(filterQuer));
                 }
             }
+
+            // sorting
+
+            if (!String.IsNullOrWhiteSpace(sortBy))
+            {
+                if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    players = isAscending? players.OrderBy(x => x.Name) : players.OrderByDescending(x=>x.Name);
+                }
+                else if (sortBy.Equals("Age", StringComparison.OrdinalIgnoreCase))
+                {
+                    players = isAscending ? players.OrderBy(x => x.Age) : players.OrderByDescending(x => x.Age);
+                }
+            }
+
 
             await players.ToListAsync();
 
