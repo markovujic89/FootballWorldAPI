@@ -1,4 +1,6 @@
 ﻿using Application.DTOs;
+using FluentValidation.Results;
+using Persistence;
 
 namespace Application
 {
@@ -14,6 +16,8 @@ namespace Application
         Task<PlayerDTO> GetPlayerByIdAsync(Guid id);
 
         Task AddPlayerAsync(CreatePlayerDTO player);
+
+        Task<List<ValidationFailure>> BulkImport(List<CreatePlayerDTO> players);
 
         Task RemovePlayerAsync(Guid id);
 

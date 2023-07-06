@@ -2,7 +2,9 @@
 using AutoMapper;
 using Domain;
 using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Persistence;
 
 namespace Application
@@ -11,11 +13,16 @@ namespace Application
     {
         private readonly DataContext _dataContext;
         private readonly IMapper _mapper;
+        private readonly IValidator<CreatePlayerDTO> _cratePlayerValidator;
+        private readonly IConfiguration _configuration;
 
-        public PlayersService(DataContext dataContext, IMapper mapper)
+
+        public PlayersService(DataContext dataContext, IMapper mapper, IValidator<CreatePlayerDTO> cratePlayerValidator, IConfiguration configuration)
         {
             _dataContext = dataContext;
             _mapper = mapper;
+            _cratePlayerValidator = cratePlayerValidator;
+            _configuration = configuration;
         }
 
         public async Task AddPlayerAsync(CreatePlayerDTO createPlayerDTO)
@@ -25,6 +32,39 @@ namespace Application
             await _dataContext.AddAsync(player);
 
             await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ValidationFailure>> BulkImport(List<CreatePlayerDTO> createPlayersDTO)
+        {
+            var errors = new List<ValidationFailure>();
+            var tasks = new List<Task>();
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            foreach (var createPlayerDTO in createPlayersDTO)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    using (var dbContext = new DataContext(new DbContextOptionsBuilder<DataContext>().UseSqlServer(connectionString).Options)) // Replace with your actual DbContext
+                    {
+                        var validationResult = await _cratePlayerValidator.ValidateAsync(createPlayerDTO);
+                        if (!validationResult.IsValid)
+                        {
+                            errors.AddRange(validationResult.Errors);
+                        }
+                        else
+                        {
+                            var player = _mapper.Map<Player>(createPlayerDTO);
+
+                            await dbContext.AddAsync(player);
+                            await dbContext.SaveChangesAsync();
+                        }
+                    }
+                }));
+            }
+
+            await Task.WhenAll(tasks);
+
+            return errors;
         }
 
         public async Task AssignePlayerToClubAsync(Guid playerId, Guid clubId)

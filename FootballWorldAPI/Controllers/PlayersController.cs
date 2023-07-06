@@ -1,7 +1,10 @@
 ﻿using Application;
 using Application.DTOs;
 using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
+using Persistence;
+using System.ComponentModel.DataAnnotations;
 
 namespace FootballWorldAPI.Controllers
 {
@@ -56,6 +59,20 @@ namespace FootballWorldAPI.Controllers
 
         }
 
+        [Route("api/players/bulkImport")]
+        [HttpPost]
+        public async Task<IActionResult> BulkImport(List<CreatePlayerDTO> playerDTOs)
+        {
+            var errors = await _playersService.BulkImport(playerDTOs);
+
+            if(errors.Count > 0)
+            {
+                return StatusCode(207, errors);
+            }
+
+            return Ok("Bulk import successful");
+        }
+
         [HttpPut]
         [Route("{id:Guid}")]
         public async Task<IActionResult> EditPlayer([FromRoute] Guid id, [FromBody] EditPlayerDTO editPlayerDTO)
@@ -89,5 +106,7 @@ namespace FootballWorldAPI.Controllers
 
             return Ok();
         }
+
+        
     }
 }
