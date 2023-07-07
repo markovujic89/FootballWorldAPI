@@ -1,15 +1,14 @@
 ﻿using Application;
 using Application.DTOs;
 using FluentValidation;
-using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
-using System.ComponentModel.DataAnnotations;
 
 namespace FootballWorldAPI.Controllers
 {
     // https://localhost:xxxx/api/players
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class PlayersController : ControllerBase
     {

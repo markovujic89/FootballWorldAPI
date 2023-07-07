@@ -44,7 +44,7 @@ namespace Application
             {
                 tasks.Add(Task.Run(async () =>
                 {
-                    using (var dbContext = new DataContext(new DbContextOptionsBuilder<DataContext>().UseSqlServer(connectionString).Options)) // Replace with your actual DbContext
+                    using (var dbContext = new DataContext(new DbContextOptionsBuilder<DataContext>().UseSqlServer(connectionString).Options))
                     {
                         var validationResult = await _cratePlayerValidator.ValidateAsync(createPlayerDTO);
                         if (!validationResult.IsValid)
