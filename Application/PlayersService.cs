@@ -146,7 +146,7 @@ namespace Application
 
         public async Task<PlayerDTO> GetPlayerByIdAsync(Guid id)
         {
-            var player = await _dataContext.Players.SingleOrDefaultAsync();
+            var player = await _dataContext.Players.FirstOrDefaultAsync(x=>x.Id == id);
 
             if (player == null)
             {

@@ -8,7 +8,6 @@ namespace FootballWorldAPI.Controllers
 {
     // https://localhost:xxxx/api/players
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class PlayersController : ControllerBase
     {
@@ -26,6 +25,7 @@ namespace FootballWorldAPI.Controllers
         // GET Players
         // GET: /api/players?filterOn=Name&filterQuery=Tom
         [HttpGet]
+        [Authorize(Roles = "Reader, Writer")]
         public async Task<ActionResult<List<PlayerDTO>>> GetAllPlayers([FromQuery] string? filterOn, 
             [FromQuery] string? filterQuery, 
             [FromQuery] string? sortBy, 
@@ -36,7 +36,23 @@ namespace FootballWorldAPI.Controllers
             return await _playersService.GetAllPlayersAsync(filterOn, filterQuery, sortBy, isAscending?? true, pageNumber, pageSize);
         }
 
+        [HttpGet]
+        [Route("{id}")]
+        [Authorize(Roles = "Reader, Writer")]
+        public async Task<ActionResult<PlayerDTO>> GetPlayerById([FromQuery] Guid id)
+        {
+            var playerDTO = await _playersService.GetPlayerByIdAsync(id);
+
+            if(playerDTO is null)
+            {
+                return BadRequest($"Player with id: {id} doesn't exist");
+            }
+
+            return Ok(playerDTO);
+        }
+
         [HttpPost]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> CreatePlayer(CreatePlayerDTO playerDTO)
         {
             var validationResult = await _cratePlayerValidator.ValidateAsync(playerDTO);
@@ -60,6 +76,7 @@ namespace FootballWorldAPI.Controllers
 
         [Route("api/players/bulkImport")]
         [HttpPost]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> BulkImport(List<CreatePlayerDTO> playerDTOs)
         {
             var errors = await _playersService.BulkImport(playerDTOs);
@@ -74,6 +91,7 @@ namespace FootballWorldAPI.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> EditPlayer([FromRoute] Guid id, [FromBody] EditPlayerDTO editPlayerDTO)
         {
             var validationResult = await _editPlayerValidator.ValidateAsync(editPlayerDTO);
@@ -90,6 +108,7 @@ namespace FootballWorldAPI.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeletePlayer([FromRoute] Guid id)
         {
             await _playersService.RemovePlayerAsync(id);
@@ -99,6 +118,7 @@ namespace FootballWorldAPI.Controllers
 
         [HttpPost]
         [Route("api/players/{playerId}/clubs/{clubId}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> AssignePlayerToClubAsync([FromRoute] Guid playerId, [FromRoute] Guid clubId)
         {
             await _playersService.AssignePlayerToClubAsync(playerId, clubId);
