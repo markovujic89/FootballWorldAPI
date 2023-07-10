@@ -1,7 +1,11 @@
 using Application;
 using Application.Core;
-using Application.DTOs;
+using Application.DTOs.Club;
+using Application.DTOs.Image;
+using Application.DTOs.LoginAndRegistration;
+using Application.DTOs.Player;
 using Application.Validations.Club;
+using Application.Validations.Images;
 using Application.Validations.Player;
 using Application.Validations.Register;
 using FluentValidation;
@@ -69,6 +73,7 @@ builder.Services.AddScoped<IValidator<CreateClubDTO>, CreateClubValidator>();
 builder.Services.AddScoped<IValidator<EditClubDTO>, EditClubValidator>();
 builder.Services.AddScoped<IValidator<RequestRegisterDTO>, RequestRegisterValidator>();
 builder.Services.AddScoped<IValidator<LoginRequestDTO>, RequestLoginValidator>();
+builder.Services.AddScoped<IValidator<ImageUploadRequestDTO>, ImageUploadRequestValidator>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 // RequestLoginValidator

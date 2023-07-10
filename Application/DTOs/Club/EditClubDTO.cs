@@ -1,6 +1,6 @@
-﻿namespace Application.DTOs
+﻿namespace Application.DTOs.Club
 {
-    public class CreateClubDTO
+    public class EditClubDTO
     {
         public string Name { get; set; }
 

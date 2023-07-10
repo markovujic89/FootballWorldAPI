@@ -14,5 +14,7 @@ namespace Persistence
         public DbSet<Club> Clubs { get; set; }
 
         public DbSet<League> Leagues { get; set; }
+
+        public DbSet<Image> Images { get; set; }
     }
 }

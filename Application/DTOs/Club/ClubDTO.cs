@@ -1,7 +1,8 @@
-﻿namespace Application.DTOs
+﻿namespace Application.DTOs.Club
 {
-    public class EditClubDTO
+    public class ClubDTO
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
 
         public string City { get; set; }

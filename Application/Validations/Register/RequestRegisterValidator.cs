@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+﻿using Application.DTOs.LoginAndRegistration;
 using FluentValidation;
 
 namespace Application.Validations.Register

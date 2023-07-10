@@ -1,6 +1,7 @@
 ﻿using Application;
-using Application.DTOs;
+using Application.DTOs.Club;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FootballWorldAPI.Controllers
@@ -21,6 +22,7 @@ namespace FootballWorldAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Reader")]
         public async Task<ActionResult<List<ClubDTO>>> GetAllClubs([FromQuery] string? filterOn,
             [FromQuery] string? filterQuery,
             [FromQuery] string? sortBy,
@@ -34,6 +36,7 @@ namespace FootballWorldAPI.Controllers
         // https://localhost:****/api/clubs/{id}
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = "Reader")]
         public async Task<ActionResult<ClubDTO>> GetById([FromRoute] Guid id)
         {
             var club = await _clubService.GetClubByIdAsync(id);
@@ -47,6 +50,7 @@ namespace FootballWorldAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Writer")]
         public async Task<ActionResult> CreateClub(CreateClubDTO createClubDTO)
         {
             try
@@ -70,6 +74,7 @@ namespace FootballWorldAPI.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> EditClub([FromRoute] Guid id, [FromBody] EditClubDTO editClubDTO)
         {
             var validationResult = await _editClubValidator.ValidateAsync(editClubDTO);
@@ -85,6 +90,7 @@ namespace FootballWorldAPI.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeleteClub([FromRoute] Guid id)
         {
             await _clubService.RemoveClubAsync(id);

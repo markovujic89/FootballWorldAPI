@@ -1,7 +1,8 @@
-﻿namespace Application.DTOs
+﻿namespace Application.DTOs.Player
 {
-    public class EditPlayerDTO
+    public class PlayerDTO
     {
+        public Guid Id { get; set; }
         public int Age { get; set; }
 
         public string Name { get; set; }

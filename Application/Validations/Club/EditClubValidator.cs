@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+﻿using Application.DTOs.Club;
 using FluentValidation;
 
 namespace Application.Validations.Club

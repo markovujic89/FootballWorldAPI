@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+﻿using Application.DTOs.Player;
 using AutoMapper;
 using Domain;
 using FluentValidation;

@@ -1,5 +1,6 @@
 ﻿using Application;
 using Application.DTOs;
+using Application.DTOs.LoginAndRegistration;
 using Application.Validations.Player;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;

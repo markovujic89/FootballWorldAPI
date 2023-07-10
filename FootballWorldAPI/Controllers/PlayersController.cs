@@ -1,5 +1,5 @@
 ﻿using Application;
-using Application.DTOs;
+using Application.DTOs.Player;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +25,7 @@ namespace FootballWorldAPI.Controllers
         // GET Players
         // GET: /api/players?filterOn=Name&filterQuery=Tom
         [HttpGet]
-        [Authorize(Roles = "Reader, Writer")]
+        [Authorize(Roles = "Reader")]
         public async Task<ActionResult<List<PlayerDTO>>> GetAllPlayers([FromQuery] string? filterOn, 
             [FromQuery] string? filterQuery, 
             [FromQuery] string? sortBy, 
@@ -38,7 +38,7 @@ namespace FootballWorldAPI.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = "Reader, Writer")]
+        [Authorize(Roles = "Reader")]
         public async Task<ActionResult<PlayerDTO>> GetPlayerById([FromQuery] Guid id)
         {
             var playerDTO = await _playersService.GetPlayerByIdAsync(id);

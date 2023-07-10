@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+﻿using Application.DTOs.Club;
 using AutoMapper;
 using Domain;
 using Microsoft.EntityFrameworkCore;

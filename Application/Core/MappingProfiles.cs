@@ -1,4 +1,5 @@
-﻿using Application.DTOs;
+﻿using Application.DTOs.Club;
+using Application.DTOs.Player;
 using AutoMapper;
 using Domain;
 
