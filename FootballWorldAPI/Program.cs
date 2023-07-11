@@ -12,6 +12,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
@@ -22,6 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -75,6 +77,7 @@ builder.Services.AddScoped<IValidator<RequestRegisterDTO>, RequestRegisterValida
 builder.Services.AddScoped<IValidator<LoginRequestDTO>, RequestLoginValidator>();
 builder.Services.AddScoped<IValidator<ImageUploadRequestDTO>, ImageUploadRequestValidator>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IImagesService, ImagesService>();
 
 // RequestLoginValidator
 
@@ -122,6 +125,14 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+// midlewere for enablin serving static file, in this case images
+// use file provider, source where static file is served
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    RequestPath = "/Images"
+});
 
 app.MapControllers();
 
