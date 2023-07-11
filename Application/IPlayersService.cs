@@ -1,6 +1,5 @@
 ﻿using Application.DTOs.Player;
 using FluentValidation.Results;
-using Persistence;
 
 namespace Application
 {

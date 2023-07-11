@@ -1,5 +1,6 @@
 ﻿using Application;
 using Application.DTOs.Club;
+using Application.DTOs.Player;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,14 @@ namespace FootballWorldAPI.Controllers
         private readonly IClubService _clubService;
         private readonly IValidator<CreateClubDTO> _createClubValidator;
         private readonly IValidator<EditClubDTO> _editClubValidator;
+        private readonly ILogger<ClubsController> _logger;
 
-        public ClubsController(IClubService clubService, IValidator<CreateClubDTO> createClubValidator, IValidator<EditClubDTO> editClubValidator)
+        public ClubsController(IClubService clubService, IValidator<CreateClubDTO> createClubValidator, IValidator<EditClubDTO> editClubValidator, ILogger<ClubsController> logger)
         {
             _clubService = clubService;
             _createClubValidator = createClubValidator;
             _editClubValidator = editClubValidator;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -43,6 +46,7 @@ namespace FootballWorldAPI.Controllers
 
             if (club is null)
             {
+                _logger.LogInformation($"Club with id: {id} doesn't exist");
                 return NotFound();
             }
 
@@ -59,6 +63,7 @@ namespace FootballWorldAPI.Controllers
 
                 if (!validationResult.IsValid)
                 {
+                    _logger.LogError($"Error occured during cration club: {createClubDTO.Name}, reason: {validationResult.Errors[0]}");
                     return BadRequest(validationResult.Errors);
                 }
 
@@ -81,6 +86,7 @@ namespace FootballWorldAPI.Controllers
 
             if (!validationResult.IsValid)
             {
+                _logger.LogError($"Error occured during updating club with id: {id}, reason: {validationResult.Errors[0]}");
                 return BadRequest(validationResult.Errors);
             }
 

@@ -14,12 +14,14 @@ namespace FootballWorldAPI.Controllers
         private readonly IPlayersService _playersService;
         private readonly IValidator<CreatePlayerDTO> _cratePlayerValidator;
         private readonly IValidator<EditPlayerDTO> _editPlayerValidator;
+        private readonly ILogger<PlayersController> _logger;
 
-        public PlayersController(IPlayersService playersService, IValidator<CreatePlayerDTO> cratePlayerValidator, IValidator<EditPlayerDTO> editPlayerValidator)
+        public PlayersController(IPlayersService playersService, IValidator<CreatePlayerDTO> cratePlayerValidator, IValidator<EditPlayerDTO> editPlayerValidator, ILogger<PlayersController> logger)
         {
             _playersService = playersService;
             _cratePlayerValidator = cratePlayerValidator;
             _editPlayerValidator = editPlayerValidator;
+            _logger = logger;
         }
 
         // GET Players
@@ -45,6 +47,7 @@ namespace FootballWorldAPI.Controllers
 
             if(playerDTO is null)
             {
+                _logger.LogError($"Player with id: {id} doesn't exist");
                 return BadRequest($"Player with id: {id} doesn't exist");
             }
 
@@ -59,6 +62,7 @@ namespace FootballWorldAPI.Controllers
 
             if (!validationResult.IsValid)
             {
+                _logger.LogError($"Error occured during cration {playerDTO.Name} {playerDTO.LastName}, reason: {validationResult.Errors[0]}");
                 return BadRequest(validationResult.Errors);
             }
 
@@ -69,6 +73,7 @@ namespace FootballWorldAPI.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Exception occured during new player creation {ex}");
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
 
@@ -98,6 +103,7 @@ namespace FootballWorldAPI.Controllers
 
             if (!validationResult.IsValid)
             {
+                _logger.LogError($"Updating player information is invalid {validationResult.Errors[0]}");
                 return BadRequest(validationResult.Errors);
             }
 
